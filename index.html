@@ -1,1 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reality Glitch</title>
 
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+overflow:hidden;
+background:#111;
+}
+
+#game{
+position:relative;
+width:100vw;
+height:100vh;
+overflow:hidden;
+background:linear-gradient(#4ec0ff,#87e0ff);
+transition:1s;
+}
+
+#player{
+position:absolute;
+width:50px;
+height:50px;
+background:#ff4444;
+border-radius:12px;
+left:100px;
+top:300px;
+box-shadow:0 0 20px red;
+transition:0.2s;
+}
+
+.platform{
+position:absolute;
+height:40px;
+background:#222;
+border-radius:10px;
+}
+
+.coin{
+position:absolute;
+width:25px;
+height:25px;
+border-radius:50%;
+background:gold;
+box-shadow:0 0 20px yellow;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+#score{
+position:absolute;
+top:20px;
+left:20px;
+font-size:30px;
+color:white;
+font-weight:bold;
+z-index:100;
+}
+
+#glitchText{
+position:absolute;
+top:70px;
+left:20px;
+font-size:24px;
+color:#ff00ff;
+font-weight:bold;
+z-index:100;
+}
+
+.glitch{
+animation:glitch 0.2s infinite;
+}
+
+@keyframes glitch{
+0%{transform:translate(2px,0);}
+25%{transform:translate(-2px,2px);}
+50%{transform:translate(2px,-2px);}
+75%{transform:translate(-2px,0);}
+100%{transform:translate(0,0);}
+}
+
+.dark{
+filter:invert(1) hue-rotate(180deg);
+}
+
+.gravity{
+transform:rotate(180deg);
+}
+
+#start{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+padding:20px 40px;
+font-size:30px;
+border:none;
+border-radius:20px;
+background:#ff00ff;
+color:white;
+cursor:pointer;
+z-index:200;
+box-shadow:0 0 20px #ff00ff;
+}
+
+.enemy{
+position:absolute;
+width:50px;
+height:50px;
+background:lime;
+border-radius:50%;
+box-shadow:0 0 20px lime;
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+<div id="score">Score: 0</div>
+<div id="glitchText">Reality Stable</div>
+
+<button id="start">START GAME</button>
+
+<div id="player"></div>
+
+<div class="platform" style="width:300px; left:0px; top:400px;"></div>
+<div class="platform" style="width:200px; left:400px; top:320px;"></div>
+<div class="platform" style="width:250px; left:750px; top:500px;"></div>
+
+<div class="coin" style="left:450px; top:260px;"></div>
+<div class="coin" style="left:800px; top:440px;"></div>
+
+<div class="enemy" id="enemy" style="left:1000px; top:350px;"></div>
+
+</div>
+
+<script>
+
+const player = document.getElementById("player");
+const game = document.getElementById("game");
+const scoreText = document.getElementById("score");
+const glitchText = document.getElementById("glitchText");
+const startBtn = document.getElementById("start");
+const enemy = document.getElementById("enemy");
+
+let x = 100;
+let y = 300;
+let velocityY = 0;
+let gravity = 0.7;
+let jumping = false;
+let score = 0;
+let gameStarted = false;
+
+const keys = {};
+
+document.addEventListener("keydown", e=>{
+keys[e.key]=true;
+});
+
+document.addEventListener("keyup", e=>{
+keys[e.key]=false;
+});
+
+startBtn.onclick = ()=>{
+startBtn.style.display="none";
+gameStarted=true;
+gameLoop();
+setInterval(randomGlitch,8000);
+};
+
+function gameLoop(){
+
+if(!gameStarted)return;
+
+requestAnimationFrame(gameLoop);
+
+velocityY += gravity;
+y += velocityY;
+
+if(keys["ArrowRight"]) x += 6;
+if(keys["ArrowLeft"]) x -= 6;
+
+if(keys[" "] && !jumping){
+velocityY = -15;
+jumping = true;
+}
+
+if(y > 350){
+y = 350;
+velocityY = 0;
+jumping = false;
+}
+
+player.style.left = x + "px";
+player.style.top = y + "px";
+
+moveEnemy();
+
+checkCoins();
+
+checkEnemy();
+
+}
+
+function moveEnemy(){
+
+let enemyX = parseInt(enemy.style.left);
+
+enemyX -= 3;
+
+if(enemyX < -100){
+enemyX = window.innerWidth + 200;
+}
+
+enemy.style.left = enemyX + "px";
+
+}
+
+function checkEnemy(){
+
+let enemyX = parseInt(enemy.style.left);
+let enemyY = parseInt(enemy.style.top);
+
+if(
+x < enemyX + 50 &&
+x + 50 > enemyX &&
+y < enemyY + 50 &&
+y + 50 > enemyY
+){
+alert("Game Over! Score: " + score);
+location.reload();
+}
+
+}
+
+function checkCoins(){
+
+document.querySelectorAll(".coin").forEach(coin=>{
+
+let coinX = parseInt(coin.style.left);
+let coinY = parseInt(coin.style.top);
+
+if(
+x < coinX + 25 &&
+x + 50 > coinX &&
+y < coinY + 25 &&
+y + 50 > coinY
+){
+
+coin.remove();
+
+score += 10;
+
+scoreText.innerHTML = "Score: " + score;
+
+createCoin();
+
+}
+
+});
+
+}
+
+function createCoin(){
+
+const coin = document.createElement("div");
+
+coin.classList.add("coin");
+
+coin.style.left = Math.random() * (window.innerWidth - 100) + "px";
+coin.style.top = Math.random() * 500 + "px";
+
+game.appendChild(coin);
+
+}
+
+function randomGlitch(){
+
+const glitches = [
+
+()=>{
+game.classList.toggle("dark");
+glitchText.innerHTML = "GLITCH: DARK MODE";
+},
+
+()=>{
+document.body.classList.toggle("glitch");
+glitchText.innerHTML = "GLITCH: REALITY SHAKE";
+},
+
+()=>{
+gravity = gravity === 0.7 ? -0.7 : 0.7;
+glitchText.innerHTML = "GLITCH: REVERSE GRAVITY";
+},
+
+()=>{
+player.style.borderRadius = "50%";
+glitchText.innerHTML = "GLITCH: PLAYER MUTATION";
+},
+
+()=>{
+game.style.background =
+`hsl(${Math.random()*360},70%,60%)`;
+glitchText.innerHTML = "GLITCH: COLOR CHAOS";
+},
+
+()=>{
+player.style.transform =
+`scale(${Math.random()*2+0.5})`;
+glitchText.innerHTML = "GLITCH: SIZE ERROR";
+}
+
+];
+
+const random = Math.floor(Math.random()*glitches.length);
+
+glitches[random]();
+
+}
+
+</script>
+
+</body>
+</html>

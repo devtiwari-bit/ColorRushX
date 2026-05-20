@@ -68,19 +68,21 @@ body{
     }
 }
 
-/* SHAKE EFFECT */
+/* SMOOTH SHAKE */
 
 @keyframes shake{
-    0%{transform:translate(0);}
-    20%{transform:translate(-10px);}
-    40%{transform:translate(10px);}
-    60%{transform:translate(-8px);}
-    80%{transform:translate(8px);}
-    100%{transform:translate(0);}
+    0%{transform:translateX(0);}
+    15%{transform:translateX(-6px);}
+    30%{transform:translateX(6px);}
+    45%{transform:translateX(-5px);}
+    60%{transform:translateX(5px);}
+    75%{transform:translateX(-3px);}
+    90%{transform:translateX(3px);}
+    100%{transform:translateX(0);}
 }
 
 .shake{
-    animation:shake 0.3s;
+    animation:shake 0.35s ease;
 }
 
 /* Top UI */
@@ -294,7 +296,7 @@ button:hover{
 
     <select id="difficulty">
         <option value="easy">Easy</option>
-        <option value="normal" selected>Normal</option>
+        <option value="normal">Normal</option>
         <option value="hard">Hard</option>
     </select>
 
@@ -373,6 +375,12 @@ let best = localStorage.getItem("rushxbest") || 0;
 
 bestText.innerHTML = best;
 
+/* SAVED DIFFICULTY */
+
+let savedDifficulty = localStorage.getItem("rushxdifficulty") || "normal";
+
+difficulty.value = savedDifficulty;
+
 function getRank(score){
 
     if(score < 10) return "Beginner";
@@ -389,6 +397,9 @@ function startGame(){
     score = 0;
 
     const mode = difficulty.value;
+
+    /* SAVE DIFFICULTY */
+    localStorage.setItem("rushxdifficulty", mode);
 
     if(mode === "easy"){
         speed = 1800;
@@ -409,6 +420,7 @@ function startGame(){
     gameover.style.display = "none";
 
     bgmusic.volume = 0.25;
+
     bgmusic.play();
 
     clearBall();
@@ -454,7 +466,7 @@ function spawnBall(){
 
     ball.style.boxShadow = `0 0 35px ${color}`;
 
-    /* SAFE AREA FIX */
+    /* SAFE AREA */
 
     const topSafeArea = 120;
 
@@ -532,7 +544,7 @@ function endGame(){
 
     setTimeout(()=>{
         document.body.classList.remove("shake");
-    },300);
+    },350);
 
     if(score > best){
 

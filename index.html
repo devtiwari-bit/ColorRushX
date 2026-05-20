@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" content="lWj1SJEMwzx8-Du4kVNx6Q-MwCpx8_rDB4k-ImuEpmU" />
+<meta name="google-site-verification" content="lWj1SJEMwzx8-Du4kVNx6Q-MwCpx8_rDB4k-ImuEpmU" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>ColorRushX - VedGames Production</title>
+
 <link rel="icon" type="image/png" href="favicon.png">
+
 <meta name="description" content="Play ColorRushX online free by Ved Games Production.Test Your Reflex!">
 
 <!-- Open Graph -->
@@ -15,7 +18,7 @@
 <meta property="og:url" content="https://devtiwari-bit.github.io/ColorRushX/">
 <meta property="og:type" content="website">
 
-<!-- Twitter preview -->
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content=" ColorRushX - Ved Games Production">
 <meta name="twitter:description" content="Play ColorRushX online free browser game.">
@@ -63,6 +66,21 @@ body{
     to{
         transform:translateY(-100vh);
     }
+}
+
+/* SHAKE EFFECT */
+
+@keyframes shake{
+    0%{transform:translate(0);}
+    20%{transform:translate(-10px);}
+    40%{transform:translate(10px);}
+    60%{transform:translate(-8px);}
+    80%{transform:translate(8px);}
+    100%{transform:translate(0);}
+}
+
+.shake{
+    animation:shake 0.3s;
 }
 
 /* Top UI */
@@ -165,6 +183,19 @@ button:hover{
     transform:scale(1.05);
 }
 
+/* Difficulty */
+
+#difficulty{
+    padding:12px 20px;
+    border:none;
+    border-radius:12px;
+    margin-bottom:20px;
+    font-size:18px;
+    background:#111827;
+    color:white;
+    outline:none;
+}
+
 /* Game Ball */
 
 .ball{
@@ -261,6 +292,14 @@ button:hover{
 
     <p>Fast reflexes only ⚡</p>
 
+    <select id="difficulty">
+        <option value="easy">Easy</option>
+        <option value="normal" selected>Normal</option>
+        <option value="hard">Hard</option>
+    </select>
+
+    <br>
+
     <button onclick="startGame()">START</button>
 
 </div>
@@ -276,6 +315,20 @@ button:hover{
 </div>
 
 <div id="watermark">@Ved Games Production</div>
+
+<!-- AUDIO -->
+
+<audio id="bgmusic" loop>
+<source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="clicksound">
+<source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="misssound">
+<source src="https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 
@@ -306,6 +359,11 @@ const menu = document.getElementById("menu");
 const gameover = document.getElementById("gameover");
 const final = document.getElementById("final");
 
+const bgmusic = document.getElementById("bgmusic");
+const clicksound = document.getElementById("clicksound");
+const misssound = document.getElementById("misssound");
+const difficulty = document.getElementById("difficulty");
+
 let score = 0;
 let speed = 1400;
 let activeBall = null;
@@ -330,7 +388,17 @@ function startGame(){
 
     score = 0;
 
-    speed = 1400;
+    const mode = difficulty.value;
+
+    if(mode === "easy"){
+        speed = 1800;
+    }
+    else if(mode === "hard"){
+        speed = 900;
+    }
+    else{
+        speed = 1400;
+    }
 
     scoreText.innerHTML = score;
 
@@ -339,6 +407,9 @@ function startGame(){
     menu.style.display = "none";
 
     gameover.style.display = "none";
+
+    bgmusic.volume = 0.25;
+    bgmusic.play();
 
     clearBall();
 
@@ -383,7 +454,7 @@ function spawnBall(){
 
     ball.style.boxShadow = `0 0 35px ${color}`;
 
-    /* FIXED SPAWN AREA */
+    /* SAFE AREA FIX */
 
     const topSafeArea = 120;
 
@@ -401,6 +472,9 @@ function spawnBall(){
     activeBall = ball;
 
     ball.onclick = () => {
+
+        clicksound.currentTime = 0;
+        clicksound.play();
 
         score++;
 
@@ -448,6 +522,17 @@ function showCombo(x,y){
 function endGame(){
 
     clearBall();
+
+    misssound.currentTime = 0;
+    misssound.play();
+
+    bgmusic.pause();
+
+    document.body.classList.add("shake");
+
+    setTimeout(()=>{
+        document.body.classList.remove("shake");
+    },300);
 
     if(score > best){
 

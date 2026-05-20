@@ -8,18 +8,19 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <meta name="description" content="Play ColorRushX online free by Ved Games Production.Test Your Reflex!">
 
-<!-- Open Graph (WhatsApp / Instagram / Facebook preview) -->
+<!-- Open Graph -->
 <meta property="og:title" content=" ColorRushX - Ved Games Production">
 <meta property="og:description" content="Play ColorRushX online free. Simple and addictive browser game.">
 <meta property="og:image" content="https://devtiwari-bit.github.io/ColorRushX/preview.png">
 <meta property="og:url" content="https://devtiwari-bit.github.io/ColorRushX/">
 <meta property="og:type" content="website">
 
-<!-- Twitter preview (also works sometimes for sharing apps) -->
+<!-- Twitter preview -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content=" ColorRushX - Ved Games Production">
 <meta name="twitter:description" content="Play ColorRushX online free browser game.">
 <meta name="twitter:image" content="https://devtiwari-bit.github.io/ColorRushX/preview.png">
+
 <style>
 
 *{
@@ -382,11 +383,15 @@ function spawnBall(){
 
     ball.style.boxShadow = `0 0 35px ${color}`;
 
+    /* FIXED SPAWN AREA */
+
+    const topSafeArea = 120;
+
     const maxX = window.innerWidth - size;
-    const maxY = window.innerHeight - size;
+    const maxY = window.innerHeight - size - topSafeArea;
 
     const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    const y = topSafeArea + (Math.random() * maxY);
 
     ball.style.left = x + "px";
     ball.style.top = y + "px";

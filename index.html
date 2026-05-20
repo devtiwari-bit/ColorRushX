@@ -72,17 +72,15 @@ body{
 
 @keyframes shake{
     0%{transform:translateX(0);}
-    15%{transform:translateX(-6px);}
-    30%{transform:translateX(6px);}
-    45%{transform:translateX(-5px);}
-    60%{transform:translateX(5px);}
-    75%{transform:translateX(-3px);}
-    90%{transform:translateX(3px);}
+    20%{transform:translateX(-4px);}
+    40%{transform:translateX(4px);}
+    60%{transform:translateX(-3px);}
+    80%{transform:translateX(3px);}
     100%{transform:translateX(0);}
 }
 
 .shake{
-    animation:shake 0.35s ease;
+    animation:shake 0.22s ease-in-out;
 }
 
 /* Top UI */
@@ -248,18 +246,26 @@ button:hover{
     }
 }
 
-/* Watermark */
+/* WATERMARK */
 
 #watermark{
     position:fixed;
     right:12px;
     bottom:10px;
 
-    color:white;
-    opacity:0.8;
-
     font-size:18px;
     font-weight:bold;
+
+    color:#ffffff;
+
+    text-shadow:
+    0 0 5px rgba(255,255,255,0.9),
+    0 0 10px rgba(0,255,255,0.7),
+    0 0 20px rgba(0,255,255,0.5);
+
+    letter-spacing:1px;
+
+    opacity:0.95;
 }
 
 </style>
@@ -398,7 +404,6 @@ function startGame(){
 
     const mode = difficulty.value;
 
-    /* SAVE DIFFICULTY */
     localStorage.setItem("rushxdifficulty", mode);
 
     if(mode === "easy"){
@@ -540,11 +545,11 @@ function endGame(){
 
     bgmusic.pause();
 
-    document.body.classList.add("shake");
+    document.documentElement.classList.add("shake");
 
     setTimeout(()=>{
-        document.body.classList.remove("shake");
-    },350);
+        document.documentElement.classList.remove("shake");
+    },220);
 
     if(score > best){
 

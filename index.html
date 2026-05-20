@@ -1,94 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Color Rush X - VedGames Production</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
 }
 
 body{
     overflow:hidden;
-    background:linear-gradient(135deg,#050816,#0d132d,#090b15);
+    background:#070b1a;
     color:white;
 }
 
 /* Animated Background */
-body::before{
-    content:"";
-    position:absolute;
-    width:200%;
-    height:200%;
-    background:
-    radial-gradient(circle,rgba(0,255,255,0.15) 10%,transparent 10%),
-    radial-gradient(circle,rgba(255,0,255,0.1) 10%,transparent 10%);
-    background-size:120px 120px;
-    animation:bgMove 12s linear infinite;
+
+.bg{
+    position:fixed;
+    width:100%;
+    height:100%;
+    overflow:hidden;
     z-index:-1;
 }
 
-@keyframes bgMove{
+.bg span{
+    position:absolute;
+    width:4px;
+    height:4px;
+    background:cyan;
+    border-radius:50%;
+    animation:move 10s linear infinite;
+    opacity:0.6;
+}
+
+@keyframes move{
     from{
-        transform:translate(0,0);
+        transform:translateY(100vh);
     }
     to{
-        transform:translate(-120px,-120px);
+        transform:translateY(-100vh);
     }
 }
 
-#topUI{
+/* Top UI */
+
+#topbar{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
+    width:90%;
+    max-width:700px;
+
     display:flex;
-    gap:20px;
-    background:rgba(255,255,255,0.08);
+    justify-content:space-between;
+
     padding:15px 25px;
-    border-radius:20px;
+
+    background:rgba(255,255,255,0.07);
     backdrop-filter:blur(10px);
-    box-shadow:0 0 25px rgba(0,255,255,0.2);
+
+    border-radius:20px;
+
+    box-shadow:0 0 20px rgba(0,255,255,0.2);
+
     z-index:100;
 }
 
-.uiBox{
+.box{
     text-align:center;
 }
 
-.uiTitle{
-    font-size:14px;
+.label{
+    font-size:13px;
     opacity:0.7;
 }
 
-.uiValue{
-    font-size:24px;
+.value{
+    font-size:25px;
     font-weight:bold;
 }
 
-#game{
-    width:100vw;
-    height:100vh;
-    position:relative;
-    overflow:hidden;
+/* Start Screen */
+
+#menu,
+#gameover{
+
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+
+    text-align:center;
+
+    background:rgba(255,255,255,0.08);
+
+    padding:40px;
+
+    border-radius:25px;
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:0 0 40px rgba(0,255,255,0.25);
 }
+
+#gameover{
+    display:none;
+}
+
+h1{
+    font-size:60px;
+    margin-bottom:10px;
+
+    background:linear-gradient(90deg,cyan,#00ff88);
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+p{
+    opacity:0.8;
+    margin-bottom:25px;
+}
+
+button{
+    padding:15px 35px;
+    border:none;
+    border-radius:15px;
+
+    font-size:20px;
+    font-weight:bold;
+
+    background:linear-gradient(90deg,cyan,#00ff88);
+
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+/* Game Ball */
 
 .ball{
+
     position:absolute;
-    width:75px;
-    height:75px;
+
     border-radius:50%;
+
     cursor:pointer;
-    animation:spawn 0.2s ease;
-    box-shadow:0 0 30px currentColor;
+
+    animation:pop 0.12s ease;
+
+    transition:transform 0.08s linear;
+
 }
 
-@keyframes spawn{
+.ball:hover{
+    transform:scale(1.08);
+}
+
+@keyframes pop{
     from{
         transform:scale(0);
     }
@@ -97,280 +178,273 @@ body::before{
     }
 }
 
-.ball:hover{
-    transform:scale(1.1);
-}
+/* Combo */
 
-#startScreen,
-#gameOver{
+.combo{
     position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    text-align:center;
-    background:rgba(255,255,255,0.08);
-    padding:40px;
-    border-radius:25px;
-    backdrop-filter:blur(10px);
-    box-shadow:0 0 40px rgba(0,255,255,0.25);
-}
-
-h1{
-    font-size:60px;
-    margin-bottom:10px;
-    background:linear-gradient(90deg,cyan,pink);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-p{
-    opacity:0.8;
-    margin-bottom:20px;
-}
-
-button{
-    padding:15px 35px;
-    border:none;
-    border-radius:15px;
-    background:linear-gradient(90deg,cyan,#00ff88);
-    color:black;
-    font-size:20px;
+    font-size:25px;
     font-weight:bold;
-    cursor:pointer;
-    transition:0.2s;
-}
-
-button:hover{
-    transform:scale(1.08);
-}
-
-#gameOver{
-    display:none;
-}
-
-#watermark{
-    position:fixed;
-    bottom:10px;
-    right:15px;
-    color:white;
-    opacity:0.8;
-    font-size:18px;
-    font-weight:bold;
-}
-
-.rank{
-    font-size:28px;
-    margin:15px 0;
-    color:#00ffe0;
-}
-
-.comboEffect{
-    position:absolute;
-    font-size:30px;
-    font-weight:bold;
-    color:white;
-    animation:fadeUp 1s forwards;
     pointer-events:none;
+    animation:combo 0.7s forwards;
 }
 
-@keyframes fadeUp{
+@keyframes combo{
     from{
         opacity:1;
         transform:translateY(0);
     }
     to{
         opacity:0;
-        transform:translateY(-60px);
+        transform:translateY(-50px);
     }
 }
+
+/* Watermark */
+
+#watermark{
+    position:fixed;
+    right:12px;
+    bottom:10px;
+
+    color:white;
+    opacity:0.8;
+
+    font-size:18px;
+    font-weight:bold;
+}
+
 </style>
 </head>
 
 <body>
 
-<div id="topUI">
-    <div class="uiBox">
-        <div class="uiTitle">SCORE</div>
-        <div class="uiValue" id="score">0</div>
+<div class="bg" id="bg"></div>
+
+<div id="topbar">
+
+    <div class="box">
+        <div class="label">SCORE</div>
+        <div class="value" id="score">0</div>
     </div>
 
-    <div class="uiBox">
-        <div class="uiTitle">RANK</div>
-        <div class="uiValue" id="rank">Beginner</div>
+    <div class="box">
+        <div class="label">RANK</div>
+        <div class="value" id="rank">Beginner</div>
     </div>
 
-    <div class="uiBox">
-        <div class="uiTitle">BEST</div>
-        <div class="uiValue" id="best">0</div>
+    <div class="box">
+        <div class="label">BEST</div>
+        <div class="value" id="best">0</div>
     </div>
+
 </div>
 
-<div id="game">
+<div id="menu">
 
-<div id="startScreen">
     <h1>COLOR RUSH X</h1>
-    <p>Test your speed and reflexes ⚡</p>
-    <button onclick="startGame()">START GAME</button>
+
+    <p>Fast reflexes only ⚡</p>
+
+    <button onclick="startGame()">START</button>
+
 </div>
 
-<div id="gameOver">
+<div id="gameover">
+
     <h1>GAME OVER</h1>
-    <div class="rank" id="finalRank"></div>
-    <p id="finalScore"></p>
-    <button onclick="restartGame()">PLAY AGAIN</button>
-</div>
+
+    <p id="final"></p>
+
+    <button onclick="startGame()">PLAY AGAIN</button>
 
 </div>
 
 <div id="watermark">@Ved Games Production</div>
 
 <script>
-const game = document.getElementById("game");
-const scoreEl = document.getElementById("score");
-const rankEl = document.getElementById("rank");
-const bestEl = document.getElementById("best");
 
-const startScreen = document.getElementById("startScreen");
-const gameOver = document.getElementById("gameOver");
+/* Background Particles */
 
-const finalScore = document.getElementById("finalScore");
-const finalRank = document.getElementById("finalRank");
+const bg = document.getElementById("bg");
+
+for(let i=0;i<50;i++){
+
+    const star = document.createElement("span");
+
+    star.style.left = Math.random()*100 + "vw";
+
+    star.style.animationDuration = 5 + Math.random()*10 + "s";
+
+    star.style.opacity = Math.random();
+
+    bg.appendChild(star);
+}
+
+/* Game Variables */
+
+const scoreText = document.getElementById("score");
+const rankText = document.getElementById("rank");
+const bestText = document.getElementById("best");
+
+const menu = document.getElementById("menu");
+const gameover = document.getElementById("gameover");
+const final = document.getElementById("final");
 
 let score = 0;
-let speed = 1600;
-let playing = false;
+let speed = 1400;
+let activeBall = null;
+let timer = null;
 
-let best = localStorage.getItem("rushBest") || 0;
-bestEl.innerHTML = best;
+let best = localStorage.getItem("rushxbest") || 0;
+
+bestText.innerHTML = best;
 
 function getRank(score){
-    if(score < 5) return "Beginner";
-    if(score < 15) return "Gamer";
-    if(score < 30) return "Pro Gamer";
+
+    if(score < 10) return "Beginner";
+    if(score < 20) return "Gamer";
+    if(score < 35) return "Pro";
     if(score < 50) return "Legend";
     if(score < 80) return "Master";
+
     return "Speed God";
 }
 
 function startGame(){
+
     score = 0;
-    speed = 1600;
-    playing = true;
 
-    scoreEl.innerHTML = score;
-    rankEl.innerHTML = "Beginner";
+    speed = 1400;
 
-    startScreen.style.display = "none";
-    gameOver.style.display = "none";
+    scoreText.innerHTML = score;
+
+    rankText.innerHTML = "Beginner";
+
+    menu.style.display = "none";
+
+    gameover.style.display = "none";
+
+    clearBall();
 
     spawnBall();
 }
 
+function clearBall(){
+
+    if(activeBall){
+        activeBall.remove();
+        activeBall = null;
+    }
+
+    clearTimeout(timer);
+}
+
 function spawnBall(){
 
-    if(!playing) return;
+    clearBall();
 
     const ball = document.createElement("div");
-    ball.classList.add("ball");
+
+    ball.className = "ball";
 
     const colors = [
         "#00f7ff",
-        "#ff00ff",
         "#00ff88",
+        "#ff00ff",
         "#ffea00",
-        "#ff4444",
+        "#ff5555",
         "#9d4dff"
     ];
 
     const color = colors[Math.floor(Math.random()*colors.length)];
 
-    ball.style.background = color;
-    ball.style.color = color;
-
-    const size = 60 + Math.random()*25;
+    const size = 65;
 
     ball.style.width = size + "px";
     ball.style.height = size + "px";
 
-    const x = Math.random() * (window.innerWidth - size);
-    const y = Math.random() * (window.innerHeight - size);
+    ball.style.background = color;
+
+    ball.style.boxShadow = `0 0 35px ${color}`;
+
+    const maxX = window.innerWidth - size;
+    const maxY = window.innerHeight - size;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
     ball.style.left = x + "px";
     ball.style.top = y + "px";
 
-    game.appendChild(ball);
+    document.body.appendChild(ball);
 
-    let clicked = false;
+    activeBall = ball;
 
     ball.onclick = () => {
 
-        clicked = true;
-
         score++;
-        scoreEl.innerHTML = score;
 
-        const rank = getRank(score);
-        rankEl.innerHTML = rank;
+        scoreText.innerHTML = score;
 
-        createCombo("+1", x, y);
+        rankText.innerHTML = getRank(score);
 
-        if(score % 4 === 0 && speed > 450){
-            speed -= 70;
+        showCombo(x,y);
+
+        if(score % 5 === 0 && speed > 500){
+            speed -= 80;
         }
-
-        ball.remove();
 
         spawnBall();
     };
 
-    setTimeout(() => {
+    timer = setTimeout(()=>{
 
-        if(!clicked){
-            endGame();
-        }
+        endGame();
 
-        ball.remove();
-
-    }, speed);
+    },speed);
 }
 
-function createCombo(text,x,y){
+function showCombo(x,y){
 
     const combo = document.createElement("div");
 
-    combo.classList.add("comboEffect");
+    combo.className = "combo";
 
-    combo.innerHTML = text;
+    combo.innerHTML = "+1";
 
     combo.style.left = x + "px";
+
     combo.style.top = y + "px";
 
-    game.appendChild(combo);
+    combo.style.color = "white";
+
+    document.body.appendChild(combo);
 
     setTimeout(()=>{
         combo.remove();
-    },1000);
+    },700);
 }
 
 function endGame(){
 
-    playing = false;
+    clearBall();
 
     if(score > best){
+
         best = score;
-        localStorage.setItem("rushBest",best);
-        bestEl.innerHTML = best;
+
+        localStorage.setItem("rushxbest",best);
+
+        bestText.innerHTML = best;
     }
 
-    finalScore.innerHTML = "Score: " + score;
-    finalRank.innerHTML = getRank(score);
+    final.innerHTML =
+    "Score: " + score +
+    "<br><br>Rank: " + getRank(score);
 
-    gameOver.style.display = "block";
+    gameover.style.display = "block";
 }
 
-function restartGame(){
-    startGame();
-}
 </script>
 
 </body>

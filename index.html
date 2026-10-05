@@ -1,33 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="google-site-verification" content="lWj1SJEMwzx8-Du4kVNx6Q-MwCpx8_rDB4k-ImuEpmU" />
+<meta name="google-site-verification" content="lWj1SJEMwzx8-Du4kVNx6Q-MwCpx8_rDB4k-ImuEpmU">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>ColorRushX - Ved Games Production</title>
 
-<meta name="description" content="Play ColorRushX, an addictive color game by Ved Games Production">
-
+<meta name="description" content="Play ColorRushX online free by Ved Games Production. Test your reflexes, build combos, unlock achievements and climb the ranks.">
 <meta name="robots" content="index, follow">
-
 <link rel="canonical" href="https://devtiwari-bit.github.io/ColorRushX/">
-
 <link rel="icon" type="image/png" href="favicon.png">
 
-<meta name="description" content="Play ColorRushX online free by Ved Games Production.Test Your Reflex!">
-
 <!-- Open Graph -->
-<meta property="og:title" content=" ColorRushX - Ved Games Production">
-<meta property="og:description" content="Play ColorRushX online free. Simple and addictive browser game.">
+<meta property="og:title" content="ColorRushX - Ved Games Production">
+<meta property="og:description" content="Test your reflexes in ColorRushX. Build combos, unlock achievements and beat your high score.">
 <meta property="og:image" content="https://devtiwari-bit.github.io/ColorRushX/preview.png">
 <meta property="og:url" content="https://devtiwari-bit.github.io/ColorRushX/">
 <meta property="og:type" content="website">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content=" ColorRushX - Ved Games Production">
-<meta name="twitter:description" content="Play ColorRushX online free browser game.">
+<meta name="twitter:title" content="ColorRushX - Ved Games Production">
+<meta name="twitter:description" content="Test your reflexes. Build combos. Beat your record.">
 <meta name="twitter:image" content="https://devtiwari-bit.github.io/ColorRushX/preview.png">
 
 <style>
@@ -36,242 +31,814 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,sans-serif;
+    font-family:Arial,Helvetica,sans-serif;
+    -webkit-tap-highlight-color:transparent;
 }
 
-body{
-    overflow:hidden;
-    background:#070b1a;
-    color:white;
-}
-
-/* Animated Background */
-
-.bg{
-    position:fixed;
+html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    z-index:-1;
+    background:#03050d;
+    color:#fff;
 }
 
-.bg span{
+body{
+    position:relative;
+    touch-action:manipulation;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+#background{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:-10;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(0,255,255,.08),transparent 30%),
+        radial-gradient(circle at 80% 70%,rgba(170,0,255,.08),transparent 35%),
+        #03050d;
+}
+
+.grid{
     position:absolute;
-    width:4px;
-    height:4px;
-    background:cyan;
+    inset:-50%;
+    width:200%;
+    height:200%;
+    background-image:
+        linear-gradient(rgba(0,255,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,255,255,.035) 1px,transparent 1px);
+    background-size:45px 45px;
+    transform:perspective(500px) rotateX(60deg);
+    animation:gridMove 12s linear infinite;
+}
+
+@keyframes gridMove{
+    from{transform:perspective(500px) rotateX(60deg) translateY(0);}
+    to{transform:perspective(500px) rotateX(60deg) translateY(45px);}
+}
+
+.particle{
+    position:absolute;
+    width:3px;
+    height:3px;
     border-radius:50%;
-    animation:move 10s linear infinite;
-    opacity:0.6;
+    background:#00f7ff;
+    box-shadow:0 0 8px #00f7ff;
+    animation:particleMove linear infinite;
 }
 
-@keyframes move{
+@keyframes particleMove{
     from{
-        transform:translateY(100vh);
+        transform:translateY(110vh);
+        opacity:0;
     }
+    15%{opacity:.8;}
+    85%{opacity:.8;}
     to{
-        transform:translateY(-100vh);
+        transform:translateY(-10vh);
+        opacity:0;
     }
 }
 
-/* SMOOTH SHAKE */
-
-@keyframes shake{
-    0%{transform:translateX(0);}
-    20%{transform:translateX(-4px);}
-    40%{transform:translateX(4px);}
-    60%{transform:translateX(-3px);}
-    80%{transform:translateX(3px);}
-    100%{transform:translateX(0);}
-}
-
-.shake{
-    animation:shake 0.22s ease-in-out;
-}
-
-/* Top UI */
+/* =========================================================
+   TOP BAR
+========================================================= */
 
 #topbar{
     position:fixed;
-    top:15px;
+    top:12px;
     left:50%;
     transform:translateX(-50%);
-    width:90%;
-    max-width:700px;
+    width:min(94%,760px);
+    min-height:72px;
 
     display:flex;
-    justify-content:space-between;
+    justify-content:space-around;
+    align-items:center;
+    gap:10px;
 
-    padding:15px 25px;
+    padding:10px 15px;
 
-    background:rgba(255,255,255,0.07);
-    backdrop-filter:blur(10px);
+    background:rgba(8,14,32,.72);
+    border:1px solid rgba(0,255,255,.15);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
 
-    border-radius:20px;
+    border-radius:22px;
 
-    box-shadow:0 0 20px rgba(0,255,255,0.2);
+    box-shadow:
+        0 0 30px rgba(0,255,255,.08),
+        inset 0 0 20px rgba(255,255,255,.02);
 
     z-index:100;
 }
 
-.box{
+.stat{
+    min-width:75px;
     text-align:center;
 }
 
-.label{
-    font-size:13px;
-    opacity:0.7;
+.statLabel{
+    font-size:10px;
+    letter-spacing:2px;
+    opacity:.55;
+    margin-bottom:3px;
 }
 
-.value{
-    font-size:25px;
-    font-weight:bold;
+.statValue{
+    font-size:22px;
+    font-weight:900;
+    line-height:1;
 }
 
-/* Start Screen */
+#score{
+    color:#00f7ff;
+    text-shadow:0 0 12px rgba(0,247,255,.6);
+}
 
-#menu,
-#gameover{
+#comboValue{
+    color:#00ff88;
+}
 
+#rank{
+    color:#fff;
+}
+
+#best{
+    color:#ffea00;
+}
+
+/* =========================================================
+   TOP BUTTONS
+========================================================= */
+
+#topButtons{
+    position:fixed;
+    right:14px;
+    top:100px;
+    z-index:150;
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.iconButton{
+    width:43px;
+    height:43px;
+
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:13px;
+
+    background:rgba(10,15,30,.75);
+    color:white;
+
+    font-size:19px;
+    cursor:pointer;
+
+    backdrop-filter:blur(10px);
+
+    transition:.2s;
+}
+
+.iconButton:hover{
+    transform:scale(1.08);
+    border-color:#00f7ff;
+    box-shadow:0 0 15px rgba(0,247,255,.25);
+}
+
+.iconButton:active{
+    transform:scale(.94);
+}
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.screen{
     position:absolute;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
 
+    width:min(92%,520px);
+
+    padding:35px 25px;
+
     text-align:center;
 
-    background:rgba(255,255,255,0.08);
+    background:rgba(8,14,32,.78);
+    border:1px solid rgba(0,255,255,.14);
 
-    padding:40px;
+    border-radius:28px;
 
-    border-radius:25px;
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
 
-    backdrop-filter:blur(12px);
+    box-shadow:
+        0 0 60px rgba(0,255,255,.12),
+        inset 0 0 30px rgba(255,255,255,.025);
 
-    box-shadow:0 0 40px rgba(0,255,255,0.25);
+    z-index:80;
 }
 
-#gameover{
+#gameover,
+#pauseScreen,
+#achievementScreen,
+#statsScreen{
     display:none;
 }
 
-h1{
-    font-size:60px;
-    margin-bottom:10px;
+.logo{
+    font-size:clamp(43px,10vw,70px);
+    font-weight:1000;
+    letter-spacing:-3px;
 
-    background:linear-gradient(90deg,cyan,#00ff88);
+    background:linear-gradient(
+        90deg,
+        #00f7ff,
+        #00ff88,
+        #00f7ff
+    );
 
+    background-size:200%;
     -webkit-background-clip:text;
+    background-clip:text;
     -webkit-text-fill-color:transparent;
+
+    animation:logoFlow 3s linear infinite;
 }
 
-p{
-    opacity:0.8;
+@keyframes logoFlow{
+    from{background-position:0%;}
+    to{background-position:200%;}
+}
+
+.subtitle{
+    margin-top:7px;
     margin-bottom:25px;
+    font-size:14px;
+    letter-spacing:2px;
+    opacity:.65;
 }
 
-button{
-    padding:15px 35px;
-    border:none;
-    border-radius:15px;
+.modeRow{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
 
-    font-size:20px;
-    font-weight:bold;
+.mode{
+    flex:1;
+    padding:13px 8px;
 
-    background:linear-gradient(90deg,cyan,#00ff88);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:13px;
+
+    background:rgba(255,255,255,.05);
+    color:white;
 
     cursor:pointer;
 
-    transition:0.2s;
+    transition:.2s;
 }
 
-button:hover{
-    transform:scale(1.05);
+.mode.active{
+    border-color:#00f7ff;
+    background:rgba(0,247,255,.1);
+    box-shadow:0 0 15px rgba(0,247,255,.12);
 }
 
-/* Difficulty */
+.mode small{
+    display:block;
+    margin-top:4px;
+    opacity:.55;
+}
+
+.mainButton{
+    width:100%;
+    padding:16px 25px;
+
+    border:0;
+    border-radius:15px;
+
+    background:linear-gradient(90deg,#00eaff,#00ff88);
+    color:#001015;
+
+    font-size:19px;
+    font-weight:900;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 0 25px rgba(0,255,255,.2);
+
+    transition:.2s;
+}
+
+.mainButton:hover{
+    transform:translateY(-2px) scale(1.02);
+    box-shadow:0 0 35px rgba(0,255,255,.35);
+}
+
+.mainButton:active{
+    transform:scale(.97);
+}
+
+.secondaryButton{
+    margin-top:10px;
+
+    width:100%;
+    padding:13px;
+
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
+
+    background:rgba(255,255,255,.05);
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+/* =========================================================
+   DIFFICULTY
+========================================================= */
 
 #difficulty{
-    padding:12px 20px;
-    border:none;
-    border-radius:12px;
-    margin-bottom:20px;
-    font-size:18px;
-    background:#111827;
+    width:100%;
+    padding:13px 15px;
+    margin-bottom:12px;
+
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:13px;
+
+    background:#0a1020;
     color:white;
+
+    font-size:16px;
     outline:none;
 }
 
-/* Game Ball */
+/* =========================================================
+   GAME
+========================================================= */
+
+#gameArea{
+    position:fixed;
+    inset:0;
+    z-index:10;
+}
 
 .ball{
-
     position:absolute;
 
     border-radius:50%;
 
     cursor:pointer;
 
-    animation:pop 0.12s ease;
+    user-select:none;
 
-    transition:transform 0.08s linear;
+    transform:translateZ(0);
 
+    animation:ballAppear .16s cubic-bezier(.2,.9,.3,1.4);
+
+    will-change:transform;
+
+    transition:
+        transform .08s ease,
+        filter .08s ease;
+}
+
+.ball::after{
+    content:"";
+    position:absolute;
+    inset:17%;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.25);
+    filter:blur(3px);
 }
 
 .ball:hover{
-    transform:scale(1.08);
+    transform:scale(1.09);
 }
 
-@keyframes pop{
+.ball.hit{
+    animation:hitBall .14s ease-out forwards;
+}
+
+@keyframes ballAppear{
     from{
-        transform:scale(0);
+        transform:scale(.1);
+        opacity:.2;
     }
     to{
         transform:scale(1);
+        opacity:1;
     }
 }
 
-/* Combo */
-
-.combo{
-    position:absolute;
-    font-size:25px;
-    font-weight:bold;
-    pointer-events:none;
-    animation:combo 0.7s forwards;
+@keyframes hitBall{
+    to{
+        transform:scale(1.8);
+        opacity:0;
+    }
 }
 
-@keyframes combo{
-    from{
+/* =========================================================
+   COMBO TEXT
+========================================================= */
+
+.comboPopup{
+    position:absolute;
+
+    pointer-events:none;
+
+    font-size:24px;
+    font-weight:1000;
+
+    z-index:200;
+
+    text-shadow:0 0 10px currentColor;
+
+    animation:comboFloat .65s forwards;
+}
+
+@keyframes comboFloat{
+    0%{
         opacity:1;
-        transform:translateY(0);
+        transform:translateY(0) scale(.8);
+    }
+
+    35%{
+        transform:translateY(-12px) scale(1.15);
+    }
+
+    100%{
+        opacity:0;
+        transform:translateY(-65px) scale(1);
+    }
+}
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+#countdown{
+    position:fixed;
+    inset:0;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    z-index:500;
+
+    pointer-events:none;
+}
+
+#countdownText{
+    font-size:110px;
+    font-weight:1000;
+
+    color:#00f7ff;
+
+    text-shadow:
+        0 0 20px #00f7ff,
+        0 0 60px #00f7ff;
+
+    animation:countPop .8s ease;
+}
+
+@keyframes countPop{
+    from{
+        opacity:0;
+        transform:scale(2);
+    }
+    50%{
+        opacity:1;
+        transform:scale(1);
     }
     to{
         opacity:0;
-        transform:translateY(-50px);
+        transform:scale(.7);
     }
 }
 
-/* WATERMARK */
+/* =========================================================
+   PAUSE
+========================================================= */
+
+.pauseTitle{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+.pauseText{
+    opacity:.6;
+    margin-bottom:25px;
+}
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+.resultScore{
+    font-size:55px;
+    font-weight:1000;
+    color:#00f7ff;
+    text-shadow:0 0 20px rgba(0,247,255,.5);
+    margin:10px 0;
+}
+
+.resultRank{
+    font-size:20px;
+    opacity:.8;
+    margin-bottom:20px;
+}
+
+.newBest{
+    display:none;
+
+    margin:10px auto 20px;
+
+    width:max-content;
+
+    padding:8px 14px;
+
+    border-radius:20px;
+
+    background:rgba(255,234,0,.12);
+    border:1px solid rgba(255,234,0,.3);
+
+    color:#ffea00;
+    font-weight:bold;
+
+    animation:bestPulse 1s infinite alternate;
+}
+
+@keyframes bestPulse{
+    from{box-shadow:0 0 5px rgba(255,234,0,.1);}
+    to{box-shadow:0 0 25px rgba(255,234,0,.35);}
+}
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+.achievementList{
+    max-height:55vh;
+    overflow:auto;
+    padding-right:3px;
+}
+
+.achievement{
+    display:flex;
+    align-items:center;
+    gap:13px;
+
+    padding:13px;
+
+    margin-bottom:9px;
+
+    border-radius:15px;
+
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.07);
+
+    text-align:left;
+}
+
+.achievementIcon{
+    width:45px;
+    height:45px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:rgba(0,247,255,.08);
+
+    font-size:23px;
+}
+
+.achievement.locked{
+    opacity:.38;
+    filter:grayscale(1);
+}
+
+.achievementName{
+    font-weight:bold;
+}
+
+.achievementDesc{
+    font-size:12px;
+    opacity:.55;
+    margin-top:3px;
+}
+
+.unlocked{
+    border-color:rgba(0,255,136,.3);
+    box-shadow:0 0 15px rgba(0,255,136,.08);
+}
+
+/* =========================================================
+   UNLOCK NOTIFICATION
+========================================================= */
+
+#unlockToast{
+    position:fixed;
+
+    top:105px;
+    left:50%;
+
+    transform:translateX(-50%) translateY(-20px);
+
+    min-width:260px;
+
+    padding:13px 18px;
+
+    text-align:center;
+
+    border-radius:16px;
+
+    background:rgba(5,15,25,.92);
+    border:1px solid rgba(0,255,136,.4);
+
+    box-shadow:0 0 30px rgba(0,255,136,.15);
+
+    z-index:600;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.3s;
+}
+
+#unlockToast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+.toastTitle{
+    color:#00ff88;
+    font-weight:bold;
+}
+
+.toastText{
+    font-size:12px;
+    opacity:.65;
+    margin-top:3px;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.statsGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+
+    margin:20px 0;
+}
+
+.statCard{
+    padding:16px;
+
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:15px;
+}
+
+.statCard strong{
+    display:block;
+    font-size:25px;
+    color:#00f7ff;
+}
+
+.statCard span{
+    font-size:11px;
+    opacity:.5;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   WATERMARK
+========================================================= */
 
 #watermark{
     position:fixed;
+
     right:12px;
     bottom:10px;
 
-    font-size:18px;
+    z-index:50;
+
+    font-size:13px;
     font-weight:bold;
-
-    color:#ffffff;
-
-    text-shadow:
-    0 0 5px rgba(255,255,255,0.9),
-    0 0 10px rgba(0,255,255,0.7),
-    0 0 20px rgba(0,255,255,0.5);
 
     letter-spacing:1px;
 
-    opacity:0.95;
+    opacity:.6;
+
+    text-shadow:
+        0 0 5px rgba(255,255,255,.8),
+        0 0 12px rgba(0,255,255,.5);
+
+    pointer-events:none;
+}
+
+/* =========================================================
+   SHAKE
+========================================================= */
+
+.shake{
+    animation:screenShake .22s ease;
+}
+
+@keyframes screenShake{
+    0%{transform:translate(0);}
+    20%{transform:translate(-5px,2px);}
+    40%{transform:translate(5px,-2px);}
+    60%{transform:translate(-4px,2px);}
+    80%{transform:translate(3px,-1px);}
+    100%{transform:translate(0);}
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px){
+
+    #topbar{
+        top:8px;
+        min-height:63px;
+        padding:8px 6px;
+        width:94%;
+        border-radius:18px;
+    }
+
+    .stat{
+        min-width:55px;
+    }
+
+    .statLabel{
+        font-size:8px;
+    }
+
+    .statValue{
+        font-size:17px;
+    }
+
+    #topButtons{
+        top:82px;
+        right:8px;
+    }
+
+    .iconButton{
+        width:37px;
+        height:37px;
+        font-size:16px;
+    }
+
+    .screen{
+        padding:28px 18px;
+        border-radius:23px;
+    }
+
+    .logo{
+        font-size:43px;
+    }
+
+    .mode{
+        font-size:12px;
+    }
+
+    .ball{
+        cursor:pointer;
+    }
+
+    #watermark{
+        font-size:10px;
+        bottom:6px;
+    }
+
+    .resultScore{
+        font-size:45px;
+    }
 }
 
 </style>
@@ -279,299 +846,1581 @@ button:hover{
 
 <body>
 
-<div class="bg" id="bg"></div>
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<div id="background">
+    <div class="grid"></div>
+</div>
+
+<!-- =====================================================
+     GAME AREA
+===================================================== -->
+
+<div id="gameArea"></div>
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
 
 <div id="topbar">
 
-    <div class="box">
-        <div class="label">SCORE</div>
-        <div class="value" id="score">0</div>
+    <div class="stat">
+        <div class="statLabel">SCORE</div>
+        <div class="statValue" id="score">0</div>
     </div>
 
-    <div class="box">
-        <div class="label">RANK</div>
-        <div class="value" id="rank">Beginner</div>
+    <div class="stat">
+        <div class="statLabel">COMBO</div>
+        <div class="statValue" id="comboValue">0</div>
     </div>
 
-    <div class="box">
-        <div class="label">BEST</div>
-        <div class="value" id="best">0</div>
+    <div class="stat">
+        <div class="statLabel">RANK</div>
+        <div class="statValue" id="rank">Beginner</div>
+    </div>
+
+    <div class="stat">
+        <div class="statLabel">BEST</div>
+        <div class="statValue" id="best">0</div>
     </div>
 
 </div>
 
-<div id="menu">
+<!-- =====================================================
+     BUTTONS
+===================================================== -->
 
-    <h1>COLOR RUSH X</h1>
+<div id="topButtons">
 
-    <p>Fast reflexes only ⚡</p>
+    <button class="iconButton" id="pauseButton" onclick="togglePause()" title="Pause">
+        ⏸
+    </button>
 
-    <select id="difficulty">
-        <option value="easy">Easy</option>
-        <option value="normal">Normal</option>
-        <option value="hard">Hard</option>
-    </select>
-
-    <br>
-
-    <button onclick="startGame()">START</button>
+    <button class="iconButton" id="soundButton" onclick="toggleSound()" title="Sound">
+        🔊
+    </button>
 
 </div>
 
-<div id="gameover">
+<!-- =====================================================
+     START MENU
+===================================================== -->
 
-    <h1>GAME OVER</h1>
+<div id="menu" class="screen">
 
-    <p id="final"></p>
+    <div class="logo">COLOR RUSH X</div>
 
-    <button onclick="startGame()">PLAY AGAIN</button>
+    <div class="subtitle">
+        TEST YOUR REFLEX
+    </div>
+
+    <div class="modeRow">
+
+        <button class="mode" data-mode="easy" onclick="selectMode('easy')">
+            EASY
+            <small>Relaxed</small>
+        </button>
+
+        <button class="mode active" data-mode="normal" onclick="selectMode('normal')">
+            NORMAL
+            <small>Balanced</small>
+        </button>
+
+        <button class="mode" data-mode="hard" onclick="selectMode('hard')">
+            HARD
+            <small>Extreme</small>
+        </button>
+
+    </div>
+
+    <button class="mainButton" onclick="startGame()">
+        ⚡ START GAME
+    </button>
+
+    <button class="secondaryButton" onclick="openAchievements()">
+        🏆 ACHIEVEMENTS
+    </button>
+
+    <button class="secondaryButton" onclick="openStats()">
+        📊 STATISTICS
+    </button>
 
 </div>
 
-<div id="watermark">@Ved Games Production</div>
+<!-- =====================================================
+     COUNTDOWN
+===================================================== -->
 
-<!-- AUDIO -->
+<div id="countdown">
+    <div id="countdownText">3</div>
+</div>
 
-<audio id="bgmusic" loop>
-<source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
+<!-- =====================================================
+     PAUSE SCREEN
+===================================================== -->
+
+<div id="pauseScreen" class="screen">
+
+    <div class="pauseTitle">PAUSED</div>
+
+    <div class="pauseText">
+        Take a breath. Your run is waiting.
+    </div>
+
+    <button class="mainButton" onclick="togglePause()">
+        ▶ RESUME
+    </button>
+
+    <button class="secondaryButton" onclick="quitGame()">
+        ✕ QUIT RUN
+    </button>
+
+</div>
+
+<!-- =====================================================
+     GAME OVER
+===================================================== -->
+
+<div id="gameover" class="screen">
+
+    <div class="subtitle">RUN COMPLETE</div>
+
+    <div class="logo" style="font-size:42px;">
+        GAME OVER
+    </div>
+
+    <div class="resultScore" id="finalScore">
+        0
+    </div>
+
+    <div class="resultRank" id="finalRank">
+        Beginner
+    </div>
+
+    <div class="newBest" id="newBest">
+        🏆 NEW BEST SCORE!
+    </div>
+
+    <button class="mainButton" onclick="startGame()">
+        ⚡ PLAY AGAIN
+    </button>
+
+    <button class="secondaryButton" onclick="backToMenu()">
+        MENU
+    </button>
+
+</div>
+
+<!-- =====================================================
+     ACHIEVEMENTS
+===================================================== -->
+
+<div id="achievementScreen" class="screen">
+
+    <div class="logo" style="font-size:38px;">
+        ACHIEVEMENTS
+    </div>
+
+    <div class="subtitle">
+        UNLOCK YOUR SKILLS
+    </div>
+
+    <div class="achievementList" id="achievementList"></div>
+
+    <button class="secondaryButton" onclick="closeScreens()">
+        BACK
+    </button>
+
+</div>
+
+<!-- =====================================================
+     STATS
+===================================================== -->
+
+<div id="statsScreen" class="screen">
+
+    <div class="logo" style="font-size:40px;">
+        STATISTICS
+    </div>
+
+    <div class="statsGrid">
+
+        <div class="statCard">
+            <strong id="totalGames">0</strong>
+            <span>Games</span>
+        </div>
+
+        <div class="statCard">
+            <strong id="totalHits">0</strong>
+            <span>Total Hits</span>
+        </div>
+
+        <div class="statCard">
+            <strong id="highestCombo">0</strong>
+            <span>Best Combo</span>
+        </div>
+
+        <div class="statCard">
+            <strong id="bestScoreStat">0</strong>
+            <span>Best Score</span>
+        </div>
+
+    </div>
+
+    <button class="secondaryButton" onclick="closeScreens()">
+        BACK
+    </button>
+
+</div>
+
+<!-- =====================================================
+     UNLOCK TOAST
+===================================================== -->
+
+<div id="unlockToast">
+
+    <div class="toastTitle">
+        🏆 ACHIEVEMENT UNLOCKED
+    </div>
+
+    <div class="toastText" id="toastText">
+        Achievement
+    </div>
+
+</div>
+
+<!-- =====================================================
+     WATERMARK
+===================================================== -->
+
+<div id="watermark">
+    @Ved Games Production
+</div>
+
+<!-- =====================================================
+     AUDIO
+===================================================== -->
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="clicksound">
-<source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+<audio id="clickSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="misssound">
-<source src="https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3" type="audio/mpeg">
+<audio id="missSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-/* Background Particles */
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
-const bg = document.getElementById("bg");
-
-for(let i=0;i<50;i++){
-
-    const star = document.createElement("span");
-
-    star.style.left = Math.random()*100 + "vw";
-
-    star.style.animationDuration = 5 + Math.random()*10 + "s";
-
-    star.style.opacity = Math.random();
-
-    bg.appendChild(star);
-}
-
-/* Game Variables */
+const gameArea = document.getElementById("gameArea");
 
 const scoreText = document.getElementById("score");
+const comboText = document.getElementById("comboValue");
 const rankText = document.getElementById("rank");
 const bestText = document.getElementById("best");
 
 const menu = document.getElementById("menu");
 const gameover = document.getElementById("gameover");
-const final = document.getElementById("final");
+const pauseScreen = document.getElementById("pauseScreen");
+const achievementScreen = document.getElementById("achievementScreen");
+const statsScreen = document.getElementById("statsScreen");
 
-const bgmusic = document.getElementById("bgmusic");
-const clicksound = document.getElementById("clicksound");
-const misssound = document.getElementById("misssound");
-const difficulty = document.getElementById("difficulty");
+const finalScore = document.getElementById("finalScore");
+const finalRank = document.getElementById("finalRank");
+const newBest = document.getElementById("newBest");
+
+const bgMusic = document.getElementById("bgMusic");
+const clickSound = document.getElementById("clickSound");
+const missSound = document.getElementById("missSound");
+
+const countdown = document.getElementById("countdown");
+const countdownText = document.getElementById("countdownText");
+
+const unlockToast = document.getElementById("unlockToast");
+const toastText = document.getElementById("toastText");
+
+const achievementList = document.getElementById("achievementList");
+
+/* =========================================================
+   GAME STATE
+========================================================= */
 
 let score = 0;
-let speed = 1400;
+let combo = 0;
+let bestCombo = 0;
+
 let activeBall = null;
 let timer = null;
 
-let best = localStorage.getItem("rushxbest") || 0;
+let gameRunning = false;
+let paused = false;
 
-bestText.innerHTML = best;
+let mode = localStorage.getItem("rushxmode") || "normal";
 
-/* SAVED DIFFICULTY */
+let soundEnabled =
+    localStorage.getItem("rushxsound") !== "false";
 
-let savedDifficulty = localStorage.getItem("rushxdifficulty") || "normal";
+let best =
+    Number(localStorage.getItem("rushxbest")) || 0;
 
-difficulty.value = savedDifficulty;
+let totalGames =
+    Number(localStorage.getItem("rushxgames")) || 0;
 
-function getRank(score){
+let totalHits =
+    Number(localStorage.getItem("rushxhits")) || 0;
 
-    if(score < 10) return "Beginner";
-    if(score < 20) return "Gamer";
-    if(score < 35) return "Pro";
-    if(score < 50) return "Legend";
-    if(score < 80) return "Master";
+let highestCombo =
+    Number(localStorage.getItem("rushxcombo")) || 0;
 
-    return "Speed God";
+let currentSpeed = 1400;
+
+let missCount = 0;
+
+let toastTimer = null;
+
+/* =========================================================
+   DIFFICULTY
+========================================================= */
+
+const difficultySettings = {
+
+    easy:{
+        speed:1750,
+        minSpeed:850,
+        size:72
+    },
+
+    normal:{
+        speed:1400,
+        minSpeed:500,
+        size:65
+    },
+
+    hard:{
+        speed:1000,
+        minSpeed:380,
+        size:58
+    }
+
+};
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+const achievements = [
+
+    {
+        id:"first",
+        icon:"🎯",
+        name:"First Blood",
+        description:"Hit your first target.",
+        check:()=>totalHits >= 1
+    },
+
+    {
+        id:"ten",
+        icon:"🔥",
+        name:"Getting Started",
+        description:"Reach 10 points.",
+        check:()=>score >= 10
+    },
+
+    {
+        id:"twenty",
+        icon:"⚡",
+        name:"Reflex Machine",
+        description:"Reach 20 points.",
+        check:()=>score >= 20
+    },
+
+    {
+        id:"fifty",
+        icon:"👑",
+        name:"Legend",
+        description:"Reach 50 points.",
+        check:()=>score >= 50
+    },
+
+    {
+        id:"hundred",
+        icon:"💎",
+        name:"Speed God",
+        description:"Reach 100 points.",
+        check:()=>score >= 100
+    },
+
+    {
+        id:"combo10",
+        icon:"🔥",
+        name:"Combo Starter",
+        description:"Reach a 10x combo.",
+        check:()=>combo >= 10
+    },
+
+    {
+        id:"combo25",
+        icon:"💥",
+        name:"Combo Monster",
+        description:"Reach a 25x combo.",
+        check:()=>combo >= 25
+    },
+
+    {
+        id:"combo50",
+        icon:"☄️",
+        name:"Unstoppable",
+        description:"Reach a 50x combo.",
+        check:()=>combo >= 50
+    },
+
+    {
+        id:"games10",
+        icon:"🎮",
+        name:"Dedicated",
+        description:"Play 10 games.",
+        check:()=>totalGames >= 10
+    },
+
+    {
+        id:"games50",
+        icon:"🏆",
+        name:"Veteran",
+        description:"Play 50 games.",
+        check:()=>totalGames >= 50
+    },
+
+    {
+        id:"score100",
+        icon:"🚀",
+        name:"Beyond Limits",
+        description:"Score 100 or more in one run.",
+        check:()=>score >= 100
+    }
+
+];
+
+/* =========================================================
+   ACHIEVEMENT STORAGE
+========================================================= */
+
+let unlocked =
+    JSON.parse(
+        localStorage.getItem("rushxachievements") || "[]"
+    );
+
+/* =========================================================
+   BACKGROUND PARTICLES
+========================================================= */
+
+function createParticles(){
+
+    const background =
+        document.getElementById("background");
+
+    for(let i=0;i<70;i++){
+
+        const p =
+            document.createElement("div");
+
+        p.className="particle";
+
+        p.style.left =
+            Math.random()*100+"vw";
+
+        p.style.animationDuration =
+            5 + Math.random()*12+"s";
+
+        p.style.animationDelay =
+            Math.random()*8+"s";
+
+        p.style.opacity =
+            .15 + Math.random()*.65;
+
+        const size =
+            1 + Math.random()*3;
+
+        p.style.width=size+"px";
+        p.style.height=size+"px";
+
+        background.appendChild(p);
+    }
 }
 
-function startGame(){
+createParticles();
 
-    score = 0;
+/* =========================================================
+   INITIAL UI
+========================================================= */
 
-    const mode = difficulty.value;
+bestText.textContent = best;
 
-    localStorage.setItem("rushxdifficulty", mode);
+selectMode(mode);
 
-    if(mode === "easy"){
-        speed = 1800;
+updateStatsUI();
+
+updateSoundIcon();
+
+/* =========================================================
+   RANK SYSTEM
+========================================================= */
+
+function getRank(value){
+
+    if(value < 10)
+        return "Beginner";
+
+    if(value < 20)
+        return "Gamer";
+
+    if(value < 35)
+        return "Pro";
+
+    if(value < 50)
+        return "Legend";
+
+    if(value < 80)
+        return "Master";
+
+    if(value < 120)
+        return "Speed God";
+
+    return "COLOR RUSH";
+}
+
+/* =========================================================
+   MODE SELECT
+========================================================= */
+
+function selectMode(selected){
+
+    mode = selected;
+
+    localStorage.setItem(
+        "rushxmode",
+        selected
+    );
+
+    document.querySelectorAll(".mode")
+        .forEach(button=>{
+
+            button.classList.toggle(
+                "active",
+                button.dataset.mode === selected
+            );
+
+        });
+}
+
+/* =========================================================
+   SOUND
+========================================================= */
+
+function updateSoundIcon(){
+
+    const button =
+        document.getElementById("soundButton");
+
+    button.textContent =
+        soundEnabled ? "🔊" : "🔇";
+}
+
+function toggleSound(){
+
+    soundEnabled = !soundEnabled;
+
+    localStorage.setItem(
+        "rushxsound",
+        soundEnabled
+    );
+
+    if(!soundEnabled){
+
+        bgMusic.pause();
+
     }
-    else if(mode === "hard"){
-        speed = 900;
+    else if(gameRunning && !paused){
+
+        bgMusic.play().catch(()=>{});
+
     }
-    else{
-        speed = 1400;
-    }
 
-    scoreText.innerHTML = score;
+    updateSoundIcon();
+}
 
-    rankText.innerHTML = "Beginner";
+function playSound(audio){
 
-    menu.style.display = "none";
+    if(!soundEnabled)
+        return;
 
-    gameover.style.display = "none";
+    audio.currentTime=0;
 
-    bgmusic.volume = 0.25;
+    audio.play().catch(()=>{});
+}
 
-    bgmusic.play();
+/* =========================================================
+   START GAME
+========================================================= */
+
+async function startGame(){
 
     clearBall();
+
+    score=0;
+    combo=0;
+    bestCombo=0;
+    missCount=0;
+
+    gameRunning=false;
+    paused=false;
+
+    const settings =
+        difficultySettings[mode];
+
+    currentSpeed =
+        settings.speed;
+
+    scoreText.textContent="0";
+    comboText.textContent="0";
+    rankText.textContent="Beginner";
+
+    menu.style.display="none";
+    gameover.style.display="none";
+    pauseScreen.style.display="none";
+
+    totalGames++;
+
+    localStorage.setItem(
+        "rushxgames",
+        totalGames
+    );
+
+    if(soundEnabled){
+
+        bgMusic.volume=.22;
+
+        bgMusic.currentTime=0;
+
+        bgMusic.play().catch(()=>{});
+
+    }
+
+    await countdownStart();
+
+    gameRunning=true;
 
     spawnBall();
 }
 
-function clearBall(){
+/* =========================================================
+   COUNTDOWN
+========================================================= */
 
-    if(activeBall){
-        activeBall.remove();
-        activeBall = null;
-    }
+function countdownStart(){
 
-    clearTimeout(timer);
+    return new Promise(resolve=>{
+
+        countdown.style.display="flex";
+
+        let count=3;
+
+        function show(){
+
+            countdownText.textContent =
+                count > 0 ? count : "GO!";
+
+            countdownText.style.animation="none";
+
+            void countdownText.offsetWidth;
+
+            countdownText.style.animation =
+                "countPop .8s ease";
+
+            if(count===0){
+
+                setTimeout(()=>{
+
+                    countdown.style.display="none";
+
+                    resolve();
+
+                },500);
+
+                return;
+            }
+
+            count--;
+
+            setTimeout(show,800);
+        }
+
+        show();
+
+    });
 }
+
+/* =========================================================
+   SPAWN BALL
+========================================================= */
 
 function spawnBall(){
 
+    if(!gameRunning || paused)
+        return;
+
     clearBall();
 
-    const ball = document.createElement("div");
+    const ball =
+        document.createElement("div");
 
-    ball.className = "ball";
+    ball.className="ball";
 
-    const colors = [
+    const colors=[
         "#00f7ff",
         "#00ff88",
         "#ff00ff",
         "#ffea00",
         "#ff5555",
-        "#9d4dff"
+        "#9d4dff",
+        "#ff7b00"
     ];
 
-    const color = colors[Math.floor(Math.random()*colors.length)];
+    const color =
+        colors[
+            Math.floor(
+                Math.random()*colors.length
+            )
+        ];
 
-    const size = 65;
+    const settings =
+        difficultySettings[mode];
 
-    ball.style.width = size + "px";
-    ball.style.height = size + "px";
+    let size =
+        settings.size;
 
-    ball.style.background = color;
+    /*
+       Slightly vary ball size.
+       Smaller balls = more challenge.
+    */
 
-    ball.style.boxShadow = `0 0 35px ${color}`;
+    const variation =
+        Math.random()*12-6;
 
-    /* SAFE AREA */
+    size =
+        Math.max(
+            48,
+            size+variation-(score*.03)
+        );
 
-    const topSafeArea = 120;
+    ball.style.width=size+"px";
+    ball.style.height=size+"px";
 
-    const maxX = window.innerWidth - size;
-    const maxY = window.innerHeight - size - topSafeArea;
+    ball.style.background =
+        `radial-gradient(
+            circle at 30% 25%,
+            #fff,
+            ${color} 20%,
+            ${color} 65%,
+            rgba(0,0,0,.3)
+        )`;
 
-    const x = Math.random() * maxX;
-    const y = topSafeArea + (Math.random() * maxY);
+    ball.style.boxShadow =
+        `0 0 12px ${color},
+         0 0 30px ${color},
+         0 0 60px ${color}`;
 
-    ball.style.left = x + "px";
-    ball.style.top = y + "px";
+    /*
+       Keep ball away from UI.
+    */
 
-    document.body.appendChild(ball);
+    const topSafe=105;
+    const bottomSafe=25;
 
-    activeBall = ball;
+    const maxX =
+        Math.max(5,window.innerWidth-size-5);
 
-    ball.onclick = () => {
+    const maxY =
+        Math.max(
+            5,
+            window.innerHeight-size-bottomSafe
+        );
 
-        clicksound.currentTime = 0;
-        clicksound.play();
+    const x =
+        5 + Math.random()*(maxX-5);
 
-        score++;
+    const y =
+        topSafe +
+        Math.random()*
+        Math.max(
+            10,
+            maxY-topSafe
+        );
 
-        scoreText.innerHTML = score;
+    ball.style.left=x+"px";
+    ball.style.top=y+"px";
 
-        rankText.innerHTML = getRank(score);
+    gameArea.appendChild(ball);
 
-        showCombo(x,y);
+    activeBall=ball;
 
-        if(score % 5 === 0 && speed > 500){
-            speed -= 80;
+    /*
+       Click / Touch
+    */
+
+    ball.addEventListener(
+        "pointerdown",
+        hitBall,
+        {passive:true}
+    );
+
+    timer=setTimeout(()=>{
+
+        if(gameRunning && !paused){
+
+            missCount++;
+
+            combo=0;
+
+            comboText.textContent="0";
+
+            endGame();
+
         }
 
-        spawnBall();
-    };
-
-    timer = setTimeout(()=>{
-
-        endGame();
-
-    },speed);
+    },currentSpeed);
 }
+
+/* =========================================================
+   HIT BALL
+========================================================= */
+
+function hitBall(event){
+
+    event.preventDefault();
+
+    if(!gameRunning || paused)
+        return;
+
+    if(!activeBall)
+        return;
+
+    clearTimeout(timer);
+
+    const ball =
+        activeBall;
+
+    activeBall=null;
+
+    /*
+       Score
+    */
+
+    score++;
+
+    combo++;
+
+    totalHits++;
+
+    bestCombo =
+        Math.max(
+            bestCombo,
+            combo
+        );
+
+    highestCombo =
+        Math.max(
+            highestCombo,
+            combo
+        );
+
+    localStorage.setItem(
+        "rushxhits",
+        totalHits
+    );
+
+    localStorage.setItem(
+        "rushxcombo",
+        highestCombo
+    );
+
+    scoreText.textContent=score;
+
+    comboText.textContent=combo;
+
+    rankText.textContent=
+        getRank(score);
+
+    /*
+       Combo bonus
+    */
+
+    if(combo>=5){
+
+        score +=
+            Math.floor(combo/5);
+
+        scoreText.textContent=score;
+
+    }
+
+    /*
+       Speed progression
+    */
+
+    const settings =
+        difficultySettings[mode];
+
+    if(score%4===0){
+
+        currentSpeed =
+            Math.max(
+                settings.minSpeed,
+                currentSpeed-55
+            );
+
+    }
+
+    /*
+       Visual hit
+    */
+
+    ball.classList.add("hit");
+
+    createParticlesBurst(
+        parseFloat(ball.style.left),
+        parseFloat(ball.style.top),
+        ball.style.boxShadow
+    );
+
+    showCombo(
+        parseFloat(ball.style.left),
+        parseFloat(ball.style.top)
+    );
+
+    playSound(clickSound);
+
+    /*
+       Unlock achievements
+    */
+
+    checkAchievements();
+
+    /*
+       Continue
+    */
+
+    setTimeout(()=>{
+
+        if(ball.parentNode)
+            ball.remove();
+
+        spawnBall();
+
+    },70);
+}
+
+/* =========================================================
+   COMBO POPUP
+========================================================= */
 
 function showCombo(x,y){
 
-    const combo = document.createElement("div");
+    const popup =
+        document.createElement("div");
 
-    combo.className = "combo";
+    popup.className=
+        "comboPopup";
 
-    combo.innerHTML = "+1";
+    if(combo>=10){
 
-    combo.style.left = x + "px";
+        popup.textContent=
+            "🔥 "+combo+"x COMBO!";
 
-    combo.style.top = y + "px";
+        popup.style.color="#ffea00";
 
-    combo.style.color = "white";
+    }
+    else if(combo>=5){
 
-    document.body.appendChild(combo);
+        popup.textContent=
+            "⚡ "+combo+"x";
+
+        popup.style.color="#00ff88";
+
+    }
+    else{
+
+        popup.textContent="+1";
+
+        popup.style.color="#fff";
+
+    }
+
+    popup.style.left=x+"px";
+    popup.style.top=y+"px";
+
+    document.body.appendChild(popup);
 
     setTimeout(()=>{
-        combo.remove();
-    },700);
+        popup.remove();
+    },650);
 }
 
-function endGame(){
+/* =========================================================
+   PARTICLE BURST
+========================================================= */
+
+function createParticlesBurst(x,y){
+
+    const colors=[
+        "#00f7ff",
+        "#00ff88",
+        "#ffea00",
+        "#ff00ff"
+    ];
+
+    for(let i=0;i<10;i++){
+
+        const particle =
+            document.createElement("div");
+
+        particle.style.position="fixed";
+
+        particle.style.left=x+"px";
+        particle.style.top=y+"px";
+
+        particle.style.width="5px";
+        particle.style.height="5px";
+
+        particle.style.borderRadius="50%";
+
+        particle.style.background=
+            colors[
+                Math.floor(
+                    Math.random()*colors.length
+                )
+            ];
+
+        particle.style.boxShadow=
+            "0 0 10px currentColor";
+
+        particle.style.pointerEvents="none";
+
+        particle.style.zIndex="300";
+
+        document.body.appendChild(particle);
+
+        const angle=
+            Math.random()*Math.PI*2;
+
+        const distance=
+            25+Math.random()*60;
+
+        const tx=
+            Math.cos(angle)*distance;
+
+        const ty=
+            Math.sin(angle)*distance;
+
+        particle.animate(
+            [
+                {
+                    transform:"translate(0,0)",
+                    opacity:1
+                },
+                {
+                    transform:
+                        `translate(${tx}px,${ty}px)`,
+                    opacity:0
+                }
+            ],
+            {
+                duration:450+Math.random()*250,
+                easing:"cubic-bezier(.2,.8,.3,1)"
+            }
+        );
+
+        setTimeout(()=>{
+            particle.remove();
+        },750);
+    }
+}
+
+/* =========================================================
+   CLEAR BALL
+========================================================= */
+
+function clearBall(){
+
+    clearTimeout(timer);
+
+    timer=null;
+
+    if(activeBall){
+
+        activeBall.remove();
+
+        activeBall=null;
+    }
+
+    gameArea
+        .querySelectorAll(".ball")
+        .forEach(ball=>ball.remove());
+}
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+function togglePause(){
+
+    if(!gameRunning)
+        return;
+
+    paused=!paused;
+
+    if(paused){
+
+        clearTimeout(timer);
+
+        pauseScreen.style.display="block";
+
+        bgMusic.pause();
+
+        document.getElementById(
+            "pauseButton"
+        ).textContent="▶";
+
+    }
+    else{
+
+        pauseScreen.style.display="none";
+
+        if(soundEnabled)
+            bgMusic.play().catch(()=>{});
+
+        document.getElementById(
+            "pauseButton"
+        ).textContent="⏸";
+
+        /*
+           Give the player a tiny grace period.
+        */
+
+        timer=setTimeout(()=>{
+
+            endGame();
+
+        },currentSpeed);
+
+    }
+}
+
+/* =========================================================
+   QUIT GAME
+========================================================= */
+
+function quitGame(){
+
+    gameRunning=false;
+    paused=false;
 
     clearBall();
 
-    misssound.currentTime = 0;
-    misssound.play();
+    bgMusic.pause();
 
-    bgmusic.pause();
+    pauseScreen.style.display="none";
 
-    document.documentElement.classList.add("shake");
+    menu.style.display="block";
+
+    document.getElementById(
+        "pauseButton"
+    ).textContent="⏸";
+}
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function endGame(){
+
+    if(!gameRunning)
+        return;
+
+    gameRunning=false;
+    paused=false;
+
+    clearBall();
+
+    playSound(missSound);
+
+    bgMusic.pause();
+
+    document.body.classList.add("shake");
 
     setTimeout(()=>{
-        document.documentElement.classList.remove("shake");
-    },220);
+        document.body.classList.remove("shake");
+    },250);
 
-    if(score > best){
+    const previousBest=best;
 
-        best = score;
+    if(score>best){
 
-        localStorage.setItem("rushxbest",best);
+        best=score;
 
-        bestText.innerHTML = best;
+        localStorage.setItem(
+            "rushxbest",
+            best
+        );
+
     }
 
-    final.innerHTML =
-    "Score: " + score +
-    "<br><br>Rank: " + getRank(score);
+    bestText.textContent=best;
 
-    gameover.style.display = "block";
+    finalScore.textContent=score;
+
+    finalRank.textContent=
+        getRank(score);
+
+    newBest.style.display =
+        score>previousBest
+            ? "block"
+            : "none";
+
+    gameover.style.display="block";
+
+    checkAchievements();
 }
+
+/* =========================================================
+   BACK TO MENU
+========================================================= */
+
+function backToMenu(){
+
+    gameRunning=false;
+
+    clearBall();
+
+    bgMusic.pause();
+
+    gameover.style.display="none";
+
+    menu.style.display="block";
+}
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+function checkAchievements(){
+
+    achievements.forEach(achievement=>{
+
+        if(
+            !unlocked.includes(achievement.id) &&
+            achievement.check()
+        ){
+
+            unlocked.push(
+                achievement.id
+            );
+
+            localStorage.setItem(
+                "rushxachievements",
+                JSON.stringify(unlocked)
+            );
+
+            showUnlock(
+                achievement
+            );
+        }
+
+    });
+}
+
+/* =========================================================
+   UNLOCK TOAST
+========================================================= */
+
+function showUnlock(achievement){
+
+    toastText.textContent=
+        achievement.name+
+        " — "+
+        achievement.description;
+
+    unlockToast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(()=>{
+
+        unlockToast.classList.remove("show");
+
+    },3000);
+}
+
+/* =========================================================
+   ACHIEVEMENT PAGE
+========================================================= */
+
+function openAchievements(){
+
+    closeAllScreens();
+
+    renderAchievements();
+
+    achievementScreen.style.display="block";
+}
+
+function renderAchievements(){
+
+    achievementList.innerHTML="";
+
+    achievements.forEach(a=>{
+
+        const isUnlocked =
+            unlocked.includes(a.id);
+
+        const div =
+            document.createElement("div");
+
+        div.className=
+            "achievement "+
+            (isUnlocked
+                ?"unlocked"
+                :"locked");
+
+        div.innerHTML=`
+
+            <div class="achievementIcon">
+                ${isUnlocked ? a.icon : "🔒"}
+            </div>
+
+            <div>
+                <div class="achievementName">
+                    ${a.name}
+                </div>
+
+                <div class="achievementDesc">
+                    ${a.description}
+                </div>
+            </div>
+
+        `;
+
+        achievementList.appendChild(div);
+
+    });
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function openStats(){
+
+    closeAllScreens();
+
+    updateStatsUI();
+
+    statsScreen.style.display="block";
+}
+
+function updateStatsUI(){
+
+    document.getElementById(
+        "totalGames"
+    ).textContent=totalGames;
+
+    document.getElementById(
+        "totalHits"
+    ).textContent=totalHits;
+
+    document.getElementById(
+        "highestCombo"
+    ).textContent=highestCombo;
+
+    document.getElementById(
+        "bestScoreStat"
+    ).textContent=best;
+}
+
+/* =========================================================
+   CLOSE SCREENS
+========================================================= */
+
+function closeAllScreens(){
+
+    menu.style.display="none";
+    gameover.style.display="none";
+    pauseScreen.style.display="none";
+    achievementScreen.style.display="none";
+    statsScreen.style.display="none";
+}
+
+function closeScreens(){
+
+    achievementScreen.style.display="none";
+    statsScreen.style.display="none";
+
+    if(!gameRunning){
+
+        menu.style.display="block";
+
+    }
+}
+
+/* =========================================================
+   KEYBOARD CONTROLS
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        /*
+           P / SPACE = pause
+        */
+
+        if(
+            event.code==="KeyP" ||
+            event.code==="Space"
+        ){
+
+            if(gameRunning){
+
+                event.preventDefault();
+
+                togglePause();
+
+            }
+
+        }
+
+        /*
+           M = sound
+        */
+
+        if(event.code==="KeyM"){
+
+            toggleSound();
+
+        }
+
+        /*
+           ESC = pause
+        */
+
+        if(event.code==="Escape"){
+
+            if(gameRunning)
+                togglePause();
+
+        }
+
+    }
+);
+
+/* =========================================================
+   PREVENT DOUBLE TAP ZOOM
+========================================================= */
+
+let lastTouch=0;
+
+document.addEventListener(
+    "touchend",
+    event=>{
+
+        const now=Date.now();
+
+        if(now-lastTouch<=300){
+
+            event.preventDefault();
+
+        }
+
+        lastTouch=now;
+
+    },
+    {passive:false}
+);
+
+/* =========================================================
+   WINDOW RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        if(activeBall){
+
+            const rect =
+                activeBall.getBoundingClientRect();
+
+            if(
+                rect.right >
+                window.innerWidth
+            ){
+
+                activeBall.style.left =
+                    Math.max(
+                        5,
+                        window.innerWidth-
+                        rect.width-
+                        5
+                    )+"px";
+            }
+
+            if(
+                rect.bottom >
+                window.innerHeight
+            ){
+
+                activeBall.style.top =
+                    Math.max(
+                        110,
+                        window.innerHeight-
+                        rect.height-
+                        25
+                    )+"px";
+            }
+
+        }
+
+    }
+);
+
+/* =========================================================
+   VISIBILITY PROTECTION
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    ()=>{
+
+        if(
+            document.hidden &&
+            gameRunning &&
+            !paused
+        ){
+
+            togglePause();
+
+        }
+
+    }
+);
 
 </script>
 
